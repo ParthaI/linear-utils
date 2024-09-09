@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	"strings"
 	"time"
 )
 
@@ -23,10 +24,10 @@ func MarshalDateTime(t *time.Time) ([]byte, error) {
 // UnmarshalDateTime converts a string from the GraphQL response to a time.Time.
 func UnmarshalDateTime(src []byte, dst *time.Time) error {
 	// Trim quotes if the string is quoted
-	// src = bytes.Trim(src, "\\\"")
+	srcStr := strings.TrimSpace(string(src))
+	srcStr = strings.Trim(srcStr, "\"")
 
 	// Convert byte slice to string
-	srcStr := string(src)
 	if srcStr == "" {
 		return nil
 	}
