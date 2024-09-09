@@ -6,56 +6,70 @@ import (
 	"time"
 )
 
-const DateTimeLayout1 = "2006-01-02T15:04:05Z07:00"       // Format with time and no milliseconds
-const DateTimeLayout2 = "2006-01-02"                      // Date-only format
-const DateTimeLayout3 = "2006-01-02T15:04:05.000Z07:00"   // Format with milliseconds
-const DateTimeLayout4 = "2006-01-02T15:04:05.000Z"
+// Define the layout for marshaling/unmarshaling. Modify this based on your API's date-time format.
+// const DateTimeLayout1 = "2006-01-02T15:04:05Z" // 2023-05-10T19:16:33.208Z
+const DateTimeLayout2 = "2006-01-02"
+const DateTimeLayout3 = "2006-01-02T15:04:05.000Z"
 
+// 2023-05-10T19:16:33.208Z
+
+// MarshalDateTime converts a time.Time to a string formatted according to the GraphQL schema.
+func MarshalDateTime(t *time.Time) ([]byte, error) {
+	if t == nil {
+		return nil, fmt.Errorf("time value is nil")
+	}
+	return []byte(t.Format(DateTimeLayout3)), nil
+}
+
+// UnmarshalDateTime converts a string from the GraphQL response to a time.Time.
 func UnmarshalDateTime(src []byte, dst *time.Time) error {
-	// Convert byte slice to string and trim spaces and quotes
+	// Trim quotes if the string is quoted
+	// src = bytes.Trim(src, "\\\"")
+
+	// Convert byte slice to string
 	srcStr := strings.TrimSpace(string(src))
 	srcStr = strings.Trim(srcStr, "\"")
-
-	// Switch case based on string length and presence of milliseconds or timezone
-	switch {
-	case len(srcStr) == len(DateTimeLayout3):
-		// Layout with milliseconds and timezone
-		parsedTime, err := time.Parse(DateTimeLayout3, srcStr)
-		if err != nil {
-			return fmt.Errorf("unable to parse date-time (layout: %s): %w", DateTimeLayout3, err)
-		}
-		*dst = parsedTime
+	if srcStr == "" {
 		return nil
-
-	case len(srcStr) == len(DateTimeLayout4):
-		// Layout with milliseconds but no timezone
-		parsedTime, err := time.Parse(DateTimeLayout4, srcStr)
-		if err != nil {
-			return fmt.Errorf("unable to parse date-time (layout: %s): %w", DateTimeLayout4, err)
-		}
-		*dst = parsedTime
-		return nil
-
-	case len(srcStr) == len(DateTimeLayout1):
-		// Layout without milliseconds, with timezone
-		parsedTime, err := time.Parse(DateTimeLayout1, srcStr)
-		if err != nil {
-			return fmt.Errorf("unable to parse date-time (layout: %s): %w", DateTimeLayout1, err)
-		}
-		*dst = parsedTime
-		return nil
-
-	case len(srcStr) == len(DateTimeLayout2):
-		// Date-only layout
-		parsedTime, err := time.Parse(DateTimeLayout2, srcStr)
-		if err != nil {
-			return fmt.Errorf("unable to parse date-time (layout: %s): %w", DateTimeLayout2, err)
-		}
-		*dst = parsedTime
-		return nil
-
-	default:
-		// If no known layout matches
-		return fmt.Errorf("unrecognized date-time format: %s", srcStr)
 	}
+
+	// Define a list of possible layouts to try
+	// layouts := []string{
+	// 	DateTimeLayout3,
+	// }
+
+	// Try each layout in sequence
+	parsedTime2, parseErr2 := time.Parse(DateTimeLayout2, srcStr)
+	parsedTime3, parseErr3 := time.Parse(DateTimeLayout3, srcStr)
+
+	if parseErr3 != nil && parseErr2 != nil {
+		if parseErr3 != nil {
+			return parseErr3
+		}
+		if parseErr2 != nil {
+			return parseErr2
+		}
+	}
+	if parseErr3 == nil {
+		*dst = parsedTime3
+	}
+	if parseErr2 == nil {
+		*dst = parsedTime2
+	}
+	// var err []error
+	// for _, layout := range layouts {
+	// 	parsedTime, parseErr := time.Parse(layout, srcStr)
+	// 	if parseErr == nil {
+	// 		*dst = parsedTime
+	// 		return nil
+	// 	}
+	// 	err = append(err, parseErr)
+	// }
+
+	// // If none of the layouts succeeded, return the last error
+	// if len(err) > 2 {
+	// 	return err[0]
+	// }
+
+	return nil
 }
