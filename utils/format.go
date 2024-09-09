@@ -6,8 +6,8 @@ import (
 )
 
 // Define the layout for marshaling/unmarshaling. Modify this based on your API's date-time format.
-const DateTimeLayout1 = "2006-01-02T15:04:05Z07:00"
-const DateTimeLayout2 = "2006-01-02"
+// const DateTimeLayout1 = "2006-01-02T15:04:05Z" // 2023-05-10T19:16:33.208Z
+// const DateTimeLayout2 = "2006-01-02"
 const DateTimeLayout3 = "2006-01-02T15:04:05.000Z"
 
 // 2023-05-10T19:16:33.208Z
@@ -17,7 +17,7 @@ func MarshalDateTime(t *time.Time) ([]byte, error) {
 	if t == nil {
 		return nil, fmt.Errorf("time value is nil")
 	}
-	return []byte(t.Format(DateTimeLayout1)), nil
+	return []byte(t.Format(DateTimeLayout3)), nil
 }
 
 // UnmarshalDateTime converts a string from the GraphQL response to a time.Time.
@@ -30,8 +30,6 @@ func UnmarshalDateTime(src []byte, dst *time.Time) error {
 
 	// Define a list of possible layouts to try
 	layouts := []string{
-		DateTimeLayout1,
-		DateTimeLayout2,
 		DateTimeLayout3,
 	}
 
