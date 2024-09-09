@@ -6,34 +6,50 @@ import (
 )
 
 // Define the layout for marshaling/unmarshaling. Modify this based on your API's date-time format.
-const DateTimeLayout = "2006-01-02T15:04:05Z07:00"
+const DateTimeLayout1 = "2006-01-02T15:04:05Z07:00"
+const DateTimeLayout2 = "2006-01-02"
+const DateTimeLayout3 = "2006-01-02T15:04:05.000Z"
+
+// 2023-05-10T19:16:33.208Z
 
 // MarshalDateTime converts a time.Time to a string formatted according to the GraphQL schema.
 func MarshalDateTime(t *time.Time) ([]byte, error) {
 	if t == nil {
 		return nil, fmt.Errorf("time value is nil")
 	}
-	return []byte(t.Format(DateTimeLayout)), nil
+	return []byte(t.Format(DateTimeLayout1)), nil
 }
 
 // UnmarshalDateTime converts a string from the GraphQL response to a time.Time.
 func UnmarshalDateTime(src []byte, dst *time.Time) error {
+	// Trim quotes if the string is quoted
+	// src = bytes.Trim(src, "\\\"")
+
 	// Convert byte slice to string
 	srcStr := string(src)
 
-	// Try parsing the string with time component
-	parsedTime, err := time.Parse(DateTimeLayout, srcStr)
-	if err == nil {
-		*dst = parsedTime
-		return nil
+	// Define a list of possible layouts to try
+	layouts := []string{
+		DateTimeLayout1,
+		DateTimeLayout2,
+		DateTimeLayout3,
 	}
 
-	// If the string doesn't include a time, try parsing it as just a date
-	parsedDateOnly, err := time.Parse("2006-01-02", srcStr)
-	if err != nil {
-		return fmt.Errorf("unable to parse date-time: %w", err)
+	// Try each layout in sequence
+	var err []error
+	for _, layout := range layouts {
+		parsedTime, parseErr := time.Parse(layout, srcStr)
+		if parseErr == nil {
+			*dst = parsedTime
+			return nil
+		}
+		err = append(err, parseErr)
 	}
 
-	*dst = parsedDateOnly
+	// If none of the layouts succeeded, return the last error
+	if len(err) > 2 {
+		return err[0]
+	}
+
 	return nil
 }
