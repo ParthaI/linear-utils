@@ -1,4 +1,4 @@
-package linear_utils
+package utils
 
 import (
 	"fmt"
