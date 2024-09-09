@@ -39,8 +39,12 @@ func UnmarshalDateTime(src []byte, dst *time.Time) error {
 	// }
 
 	// Try each layout in sequence
-	parsedTime2, parseErr2 := time.Parse(DateTimeLayout2, srcStr)
-	parsedTime3, parseErr3 := time.Parse(DateTimeLayout3, srcStr)
+	var parsedTime2, parsedTime3 time.Time
+	var parseErr2, parseErr3 error
+	parsedTime2, parseErr2 = time.Parse(DateTimeLayout2, srcStr)
+	if parseErr2 != nil {
+		parsedTime3, parseErr3 = time.Parse(DateTimeLayout3, srcStr)
+	}
 
 	if parseErr3 != nil && parseErr2 != nil {
 		if parseErr3 != nil {
