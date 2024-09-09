@@ -2,7 +2,6 @@ package utils
 
 import (
 	"fmt"
-	"strings"
 	"time"
 )
 
@@ -27,11 +26,11 @@ func UnmarshalDateTime(src []byte, dst *time.Time) error {
 	// src = bytes.Trim(src, "\\\"")
 
 	// Convert byte slice to string
-	srcStr := strings.TrimSpace(string(src))
-	srcStr = strings.Trim(srcStr, "\"")
-	if srcStr == "" {
-		return nil
-	}
+	// srcStr := strings.TrimSpace(string(src))
+	// srcStr = strings.Trim(srcStr, "\"")
+	// if srcStr == "" {
+	// 	return nil
+	// }
 
 	// Define a list of possible layouts to try
 	// layouts := []string{
@@ -39,11 +38,12 @@ func UnmarshalDateTime(src []byte, dst *time.Time) error {
 	// }
 
 	// Try each layout in sequence
+	// time.Parse(`"`+dateFormat+`"`, string(b))
 	var parsedTime2, parsedTime3 time.Time
 	var parseErr2, parseErr3 error
-	parsedTime2, parseErr2 = time.Parse(DateTimeLayout2, srcStr)
+	parsedTime2, parseErr2 = time.Parse(`"`+DateTimeLayout2+`"`, string(src))
 	if parseErr2 != nil {
-		parsedTime3, parseErr3 = time.Parse(DateTimeLayout3, srcStr)
+		parsedTime3, parseErr3 = time.Parse(`"`+DateTimeLayout3+`"`, string(src))
 	}
 
 	if parseErr3 != nil && parseErr2 != nil {
