@@ -7,7 +7,7 @@ import (
 
 // Define the layout for marshaling/unmarshaling. Modify this based on your API's date-time format.
 // const DateTimeLayout1 = "2006-01-02T15:04:05Z" // 2023-05-10T19:16:33.208Z
-// const DateTimeLayout2 = "2006-01-02"
+const DateTimeLayout2 = "2006-01-02"
 const DateTimeLayout3 = "2006-01-02T15:04:05.000Z"
 
 // 2023-05-10T19:16:33.208Z
@@ -27,27 +27,47 @@ func UnmarshalDateTime(src []byte, dst *time.Time) error {
 
 	// Convert byte slice to string
 	srcStr := string(src)
+	if srcStr == "" {
+		return nil
+	}
 
 	// Define a list of possible layouts to try
-	layouts := []string{
-		DateTimeLayout3,
-	}
+	// layouts := []string{
+	// 	DateTimeLayout3,
+	// }
 
 	// Try each layout in sequence
-	var err []error
-	for _, layout := range layouts {
-		parsedTime, parseErr := time.Parse(layout, srcStr)
-		if parseErr == nil {
-			*dst = parsedTime
-			return nil
-		}
-		err = append(err, parseErr)
-	}
+	parsedTime2, parseErr2 := time.Parse(DateTimeLayout2, srcStr)
+	parsedTime3, parseErr3 := time.Parse(DateTimeLayout3, srcStr)
 
-	// If none of the layouts succeeded, return the last error
-	if len(err) > 2 {
-		return err[0]
+	if parseErr3 != nil && parseErr2 != nil {
+		if parseErr3 != nil {
+			return parseErr3
+		}
+		if parseErr2 != nil {
+			return parseErr2
+		}
 	}
+	if parseErr3 == nil {
+		*dst = parsedTime3
+	}
+	if parseErr2 == nil {
+		*dst = parsedTime2
+	}
+	// var err []error
+	// for _, layout := range layouts {
+	// 	parsedTime, parseErr := time.Parse(layout, srcStr)
+	// 	if parseErr == nil {
+	// 		*dst = parsedTime
+	// 		return nil
+	// 	}
+	// 	err = append(err, parseErr)
+	// }
+
+	// // If none of the layouts succeeded, return the last error
+	// if len(err) > 2 {
+	// 	return err[0]
+	// }
 
 	return nil
 }
