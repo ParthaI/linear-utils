@@ -23,20 +23,20 @@ title: AWS DevOps Utility Documentation
 <h2 class="section-title">Available Guides</h2>
 
 <div class="guides-container">
-  <div class="card fade-in">
+  <div class="card">
     <div class="card-icon">
       <span class="icon">📦</span>
     </div>
     <div class="card-content">
       <h3>
-        <a href="ecr-enhanced-scanning/scan_ecr_enhanced.sh"
+        <a href="ecr-enhanced-scanning/ecr-enhanced-scanning.html"
           >ECR Enhanced Security Scanning</a
         >
       </h3>
       <p>
-        A bash script to automate the process of building a Docker image,
-        pushing it to Amazon ECR, and performing enhanced security scanning to
-        identify vulnerabilities.
+        A comprehensive guide to automating Docker image security scanning with
+        AWS ECR Enhanced Scanning. Learn how to build, push, scan, and monitor
+        Docker images for vulnerabilities.
       </p>
       <div class="tags">
         <span class="tag">ECR</span>
@@ -46,13 +46,13 @@ title: AWS DevOps Utility Documentation
     </div>
   </div>
 
-  <div class="card fade-in">
+  <div class="card">
     <div class="card-icon">
       <span class="icon">🔍</span>
     </div>
     <div class="card-content">
       <h3>
-        <a href="steampipe-ecs-guide/run-steampipe-in-ecs-container.md"
+        <a href="steampipe-ecs-guide/steampipe-ecs-guide.html"
           >Running Steampipe in ECS Container</a
         >
       </h3>
@@ -96,4 +96,14 @@ title: AWS DevOps Utility Documentation
       }
     }
   }
+
+  // Execute when the DOM is fully loaded
+  document.addEventListener("DOMContentLoaded", function () {
+    // Add animation classes after the page has loaded
+    const cards = document.querySelectorAll(".card");
+    cards.forEach((card, index) => {
+      card.classList.add("fade-in");
+      card.style.animationDelay = 0.2 * (index + 1) + "s";
+    });
+  });
 </script>

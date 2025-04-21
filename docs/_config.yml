@@ -8,3 +8,31 @@ url: "" # Your GitHub Pages URL
 
 # Build settings
 markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+
+# Markdown Processing
+highlighter: rouge
+
+# Include files & folders that might be ignored
+include:
+  - _includes
+  - _layouts
+  - assets
+
+# Defaults for front matter
+defaults:
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "default"
+  - scope:
+      path: "*.md"
+    values:
+      layout: "default"
+
+# Plugins
+plugins:
+  - jekyll-seo-tag
