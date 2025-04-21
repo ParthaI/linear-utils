@@ -3,35 +3,97 @@ layout: default
 title: AWS DevOps Utility Documentation
 ---
 
-<h1>{{ page.title }}</h1>
-<p>
-  This repository contains documentation and utilities for AWS DevOps workflows.
-</p>
-
-<h2>Available Guides</h2>
-
-<div class="card">
-  <h3>
-    <a href="ecr-enhanced-scanning/scan_ecr_enhanced.sh"
-      >ECR Enhanced Security Scanning</a
-    >
-  </h3>
-  <p>
-    A bash script to automate the process of building a Docker image, pushing it
-    to Amazon ECR, and performing enhanced security scanning to identify
-    vulnerabilities.
+<div class="hero-section">
+  <h1 class="animated-title">{{ page.title }}</h1>
+  <p class="subtitle">
+    This repository contains documentation and utilities for AWS DevOps
+    workflows.
   </p>
 </div>
 
-<div class="card">
-  <h3>
-    <a href="steampipe-ecs-guide/run-steampipe-in-ecs-container.md"
-      >Running Steampipe in ECS Container</a
-    >
-  </h3>
-  <p>
-    Comprehensive guide for setting up and running Steampipe on Amazon ECS
-    Fargate with credential sourcing from the container. Includes step-by-step
-    instructions and a sample CloudFormation stack.
-  </p>
+<div class="search-container">
+  <input
+    type="text"
+    id="searchInput"
+    class="search-box"
+    placeholder="Search guides..."
+    onkeyup="filterGuides()" />
 </div>
+
+<h2 class="section-title">Available Guides</h2>
+
+<div class="guides-container">
+  <div class="card fade-in">
+    <div class="card-icon">
+      <span class="icon">📦</span>
+    </div>
+    <div class="card-content">
+      <h3>
+        <a href="ecr-enhanced-scanning/scan_ecr_enhanced.sh"
+          >ECR Enhanced Security Scanning</a
+        >
+      </h3>
+      <p>
+        A bash script to automate the process of building a Docker image,
+        pushing it to Amazon ECR, and performing enhanced security scanning to
+        identify vulnerabilities.
+      </p>
+      <div class="tags">
+        <span class="tag">ECR</span>
+        <span class="tag">Security</span>
+        <span class="tag">Docker</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card fade-in">
+    <div class="card-icon">
+      <span class="icon">🔍</span>
+    </div>
+    <div class="card-content">
+      <h3>
+        <a href="steampipe-ecs-guide/run-steampipe-in-ecs-container.md"
+          >Running Steampipe in ECS Container</a
+        >
+      </h3>
+      <p>
+        Comprehensive guide for setting up and running Steampipe on Amazon ECS
+        Fargate with credential sourcing from the container. Includes
+        step-by-step instructions and a sample CloudFormation stack.
+      </p>
+      <div class="tags">
+        <span class="tag">Steampipe</span>
+        <span class="tag">ECS</span>
+        <span class="tag">Fargate</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function filterGuides() {
+    const input = document.getElementById("searchInput");
+    const filter = input.value.toUpperCase();
+    const cards = document.getElementsByClassName("card");
+
+    for (let i = 0; i < cards.length; i++) {
+      const card = cards[i];
+      const cardText = card.textContent || card.innerText;
+      const tags = card.getElementsByClassName("tag");
+      let matchFound = cardText.toUpperCase().indexOf(filter) > -1;
+
+      // Also check tags
+      for (let j = 0; j < tags.length; j++) {
+        if (tags[j].textContent.toUpperCase().indexOf(filter) > -1) {
+          matchFound = true;
+        }
+      }
+
+      if (matchFound) {
+        card.style.display = "";
+      } else {
+        card.style.display = "none";
+      }
+    }
+  }
+</script>
