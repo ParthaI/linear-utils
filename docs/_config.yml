@@ -1,0 +1,10 @@
+title: AWS DevOps Utility Documentation
+description: A collection of useful AWS DevOps utilities and guides
+theme: jekyll-theme-minimal
+
+# GitHub Pages settings
+baseurl: "" # if your site is at username.github.io/repo-name, then set this to "/repo-name"
+url: "" # Your GitHub Pages URL
+
+# Build settings
+markdown: kramdown
